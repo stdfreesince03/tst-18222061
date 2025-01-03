@@ -4,7 +4,7 @@ export default function Price({ price, locale, currency }) {
   const formatPrice = () =>
     new Intl.NumberFormat(locale, {
       style: 'currency',
-      currency:currency || 'USD',
+      currency : currency || 'USD'
     }).format(price);
 
   return <span>{formatPrice()}</span>;
