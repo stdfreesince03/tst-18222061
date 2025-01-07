@@ -45,81 +45,55 @@ router.put(
   })
 );
 
-// router.get(
-//   '/track/:orderId',
-//   handler(async (req, res) => {
-//     const { orderId } = req.params;
-//     const user = await UserModel.findById(req.user.id);
-//
-//     const filter = {
-//       _id: orderId,
-//     };
-//
-//     if (!user.isAdmin) {
-//       filter.user = user._id;
-//     }
-//
-//     const order = await OrderModel.findOne(filter);
-//
-//     if (!order) return res.send(UNAUTHORIZED);
-//
-//     return res.send(order);
-//   })
-// );
-
 router.get(
-    '/track/:orderId',
-    handler(async (req, res) => {
-        const { orderId } = req.params;
+  '/track/:orderId',
+  handler(async (req, res) => {
+    const { orderId } = req.params;
+    const user = await UserModel.findById(req.user.id);
 
-        // First validate if orderId is valid MongoDB id
-        if (!mongoose.Types.ObjectId.isValid(orderId)) {
-            return res.status(404).send({ error: 'Order not found' });
-        }
+    const filter = {
+      _id: orderId,
+    };
 
-        const user = await UserModel.findById(req.user.id);
+    if (!user.isAdmin) {
+      filter.user = user._id;
+    }
 
-        const filter = {
-            _id: orderId,
-        };
+    const order = await OrderModel.findOne(filter);
 
-        // Only add user filter if not admin
-        if (!user.isAdmin) {
-            filter.user = user._id;
-        }
+    if (!order) return res.send(UNAUTHORIZED);
 
-        const order = await OrderModel.findOne(filter);
-
-        // Simply return 404 if order doesn't exist
-        if (!order) {
-            return res.status(404).send({ error: 'Order not found' });
-        }
-
-        return res.send(order);
-    })
+    return res.send(order);
+  })
 );
 
 router.get(
-    '/newOrderForCurrentUser',
-    handler(async (req, res) => {
-        try {
-            let order = await getNewOrderForCurrentUser(req);
+  '/newOrderForCurrentUser',
+  handler(async (req, res) => {
+    const order = await getNewOrderForCurrentUser(req);
+    if (order) res.send(order);
+    else res.status(BAD_REQUEST).send();
+  })
+);
 
-            if (!order) {
-                await new Promise(resolve => setTimeout(resolve, 5));
-                order = await getNewOrderForCurrentUser(req);
-            }
+router.get('/allstatus', (req, res) => {
+  const allStatus = Object.values(OrderStatus);
+  res.send(allStatus);
+});
 
-            if (!order) {
-                return res.status(BAD_REQUEST).send();
-            }
+router.get(
+  '/:status?',
+  handler(async (req, res) => {
+    const status = req.params.status;
+    const user = await UserModel.findById(req.user.id);
+    const filter = {};
 
-            return res.send(order);
-        } catch (error) {
-            console.error('Error fetching order:', error);
-            return res.status(500).send('Internal Server Error');
-        }
-    })
+    if (!user.isAdmin) filter.user = user._id;
+    if (status) filter.status = status;
+
+    const orders = await OrderModel.find(filter).sort('-createdAt');
+    res.send(orders);
+  })
 );
 
 const getNewOrderForCurrentUser = async req =>
