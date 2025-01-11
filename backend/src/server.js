@@ -19,6 +19,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 app.use(express.json());
+
 app.use(
   cors({
     credentials: true,
@@ -26,36 +27,36 @@ app.use(
   })
 );
 
-app.use('/api/solstra', createProxyMiddleware({
-    target: 'https://api-staging.solstra.fi',
-    changeOrigin: true,
-    secure: true,  // Change to false to avoid SSL issues in development
-    pathRewrite: {
-        '^/api/solstra': '/service'
-    },
-    onProxyReq: (proxyReq, req, res) => {
-        // Copy all headers from the original request
-        if (req.headers.authorization) {
-            proxyReq.setHeader('Authorization', req.headers.authorization);
-        }
-        proxyReq.setHeader('x-api-key', 'ee4ede1f-1cf2-4aaa-9826-f9e74cce444e');
-
-        console.log('Proxying request:', {
-            path: proxyReq.path,
-            headers: proxyReq.getHeaders(),
-            method: proxyReq.method
-        });
-    },
-    onError: (err, req, res) => {
-        console.error('Proxy Error Details:', {
-            error: err.message,
-            code: err.code,
-            stack: err.stack
-        });
-        res.status(500).send(err.message);
-    },
-    logLevel: 'debug'  // Add detailed logging
-}));
+// app.use('/api/solstra', createProxyMiddleware({
+//     target: 'https://api-staging.solstra.fi',
+//     changeOrigin: true,
+//     secure: true,  // Change to false to avoid SSL issues in development
+//     pathRewrite: {
+//         '^/api/solstra': '/service'
+//     },
+//     onProxyReq: (proxyReq, req, res) => {
+//         // Copy all headers from the original request
+//         if (req.headers.authorization) {
+//             proxyReq.setHeader('Authorization', req.headers.authorization);
+//         }
+//         proxyReq.setHeader('x-api-key', 'ee4ede1f-1cf2-4aaa-9826-f9e74cce444e');
+//
+//         console.log('Proxying request:', {
+//             path: proxyReq.path,
+//             headers: proxyReq.getHeaders(),
+//             method: proxyReq.method
+//         });
+//     },
+//     onError: (err, req, res) => {
+//         console.error('Proxy Error Details:', {
+//             error: err.message,
+//             code: err.code,
+//             stack: err.stack
+//         });
+//         res.status(500).send(err.message);
+//     },
+//     logLevel: 'debug'  // Add detailed logging
+// }));
 
 app.use('/api/foods', foodRouter);
 app.use('/api/users', userRouter);

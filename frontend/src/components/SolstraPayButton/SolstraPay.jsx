@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Connection, PublicKey, Transaction, SystemProgram, Keypair } from '@solana/web3.js';
 import axios from 'axios';
 import SolPriceDisplay from "../SolPriceDisplay/SolPriceDisplay";
+import bs58 from 'bs58';
+import nacl from 'tweetnacl';
 
 
 
@@ -12,6 +14,8 @@ export default function SolstraPayButton({ order }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const CORS_PROXY = "http://localhost:8080/";
+    const API_URL = "https://api-staging.solstra.fi/service/pay/create";
     const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
     useEffect(() => {
@@ -20,24 +24,24 @@ export default function SolstraPayButton({ order }) {
         }
     }, [recipientWallet]);
 
+
+
     const createPayment = async () => {
         try {
             setIsLoading(true);
             setStatus('Creating payment...');
 
-            const response = await axios.post('http://localhost:8000/api/solstra/pay/create',  {
+            // CORS proxy will prepend to the full URL
+            const response = await axios.post(`${CORS_PROXY}${API_URL}`, {
                 currency: 'SOL',
                 amount: order.totalPrice,
             }, {
                 headers: {
-                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`,
+                    'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndpbmF0YXRyaXN0YW4wNEBnbWFpbC5jb20iLCJhdXRoIjoiZ29vZ2xlIiwiaXNBY3RpdmUiOnRydWUsImFwaUtleSI6ImVlNGVkZTFmLTFjZjItNGFhYS05ODI2LWY5ZTc0Y2NlNDQ0ZSIsImlhdCI6MTczNjUzOTk4MywiZXhwIjoxNzM2NTU0MzgzfQ.ueSNDSd_1ATG3kgwsIkLez33iopJQcywvdIP__UzWcg`,
                     'x-api-key': 'ee4ede1f-1cf2-4aaa-9826-f9e74cce444e',
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                withCredentials: false
+                }
             });
-
             if (!response.data?.data?.walletAddress) {
                 throw new Error('No wallet address received');
             }
@@ -53,6 +57,7 @@ export default function SolstraPayButton({ order }) {
         }
     };
 
+
     const sendPayment = async () => {
         if (!senderWallet || !recipientWallet) {
             setStatus('Please enter valid wallet details');
@@ -63,9 +68,23 @@ export default function SolstraPayButton({ order }) {
             setStatus('Sending payment...');
             setIsLoading(true);
 
-            const senderKeypair = Keypair.fromSecretKey(
-                new Uint8Array(JSON.parse(senderWallet))
-            );
+            let privateKeyUint8;
+            try {
+                // Handle base58 private key
+                const decodedKey = bs58.decode(senderWallet);
+
+                // For Solana, we need exactly 64 bytes
+                if (decodedKey.length !== 64) {
+                    throw new Error('Invalid private key length. Expected 64 bytes.');
+                }
+
+                privateKeyUint8 = new Uint8Array(decodedKey);
+
+            } catch (err) {
+                throw new Error('Invalid private key format. Please provide a valid base58 encoded private key.');
+            }
+
+            const senderKeypair = Keypair.fromSecretKey(privateKeyUint8);
 
             const transaction = new Transaction().add(
                 SystemProgram.transfer({
@@ -92,7 +111,6 @@ export default function SolstraPayButton({ order }) {
             setIsLoading(false);
         }
     };
-
     return (
         <div style={{ textAlign: 'center', position: 'relative' }}>
             <button
