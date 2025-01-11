@@ -83,11 +83,9 @@ export default function SolstraPayButton({ order }) {
 
 
                 if (decodedKey.length === 32) {
-                    // If it's a 32-byte key, we need to derive the keypair
                     const keyPair = nacl.sign.keyPair.fromSeed(new Uint8Array(decodedKey));
                     privateKeyUint8 = new Uint8Array([...decodedKey, ...keyPair.publicKey]);
                 } else if (decodedKey.length === 64) {
-                    // If it's already 64 bytes, just convert to Uint8Array
                     privateKeyUint8 = new Uint8Array(decodedKey);
                 } else {
                     throw new Error('Invalid private key length');
