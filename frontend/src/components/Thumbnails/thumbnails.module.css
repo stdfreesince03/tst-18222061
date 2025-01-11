@@ -10,13 +10,22 @@
 .list li a {
   height: 22.5rem;
   width: 20rem;
-  border: 1px solid whitesmoke;
+  border: 1px solid #c5cae9;
   border-radius: 1rem;
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  color: #e72929;
+  color: #4527a0;
+  text-decoration: none;
+  background-color: #f3f1f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.list li a:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .image {
@@ -36,10 +45,11 @@
   top: 0.5rem;
   right: 1rem;
   font-size: 1.2rem;
+  color: #7e57c2;
 }
 
 .favorite.not {
-  color: grey;
+  color: #b0bec5;
 }
 
 .stars {
@@ -54,10 +64,10 @@
 
 .origins span {
   border-radius: 2rem;
-  background-color: whitesmoke;
+  background-color: #ede7f6;
   display: inline-block;
   font-size: 0.8rem;
-  color: grey;
+  color: #5c6bc0;
   margin-right: 0.3rem;
   padding: 0 0.5rem;
   margin-top: 0.2rem;
@@ -71,15 +81,17 @@
   font-size: 0.9rem;
   flex: 3;
   text-align: right;
+  color: #3f51b5;
 }
 
 .price {
   position: absolute;
   bottom: 0;
   left: 0.9rem;
-  background-color: white;
+  background-color: #ffffff;
   padding: 0.3rem 100% 0 0;
-  color: #414141;
+  color: #4527a0;
   margin-top: 0.7rem;
   font-size: 1.1rem;
+  font-weight: bold;
 }

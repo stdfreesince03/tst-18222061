@@ -1,15 +1,15 @@
 .header {
   background: white;
   padding: 0;
-  border-bottom: 1px solid #e72929;
+  border-bottom: 1px solid #5c6bc0; /* Indigo border */
 }
 
 .header a {
-  color: #af1313;
+  color: #3f51b5; /* Indigo text color */
 }
 
 .header a:hover {
-  background: #e72929;
+  background: #5c6bc0; /* Darker indigo on hover */
   color: white;
   cursor: pointer;
 }
@@ -23,6 +23,7 @@
 .logo {
   font-weight: bold;
   padding: 1rem;
+  color: #4527a0; /* Purple indigo logo */
 }
 
 .header ul {
@@ -43,7 +44,7 @@
 .menu {
   position: absolute;
   z-index: 1001;
-  background-color: whitesmoke;
+  background-color: #ede7f6; /* Light purple for the menu background */
   display: none;
 }
 
@@ -57,7 +58,7 @@
 }
 
 .cart_count {
-  background-color: #ff4d4d;
+  background-color: #7e57c2; /* Purple for cart count */
   color: white;
   padding: 0.1rem 0.45rem;
   border-radius: 100rem;

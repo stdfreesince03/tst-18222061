@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import classes from './map.module.css';
 import 'leaflet/dist/leaflet.css';
+
 import {
   MapContainer,
   TileLayer,
@@ -8,6 +9,7 @@ import {
   Popup,
   useMapEvents,
 } from 'react-leaflet';
+
 import { toast } from 'react-toastify';
 import * as L from 'leaflet';
 

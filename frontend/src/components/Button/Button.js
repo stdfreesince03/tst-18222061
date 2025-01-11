@@ -32,7 +32,7 @@ export default function Button({
 Button.defaultProps = {
   type: 'button',
   text: 'Submit',
-  backgroundColor: '#e72929',
+  backgroundColor: '#3f51b5',
   color: 'white',
   fontSize: '1.3rem',
   width: '12rem',

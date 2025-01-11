@@ -46,7 +46,7 @@ export default function ProfilePage() {
             error={errors.address}
           />
 
-          <Button type="submit" text="Update" backgroundColor="#009e84" />
+          <Button type="submit" text="Update"  />
         </form>
 
         <ChangePassword />

@@ -10,27 +10,38 @@
   border: none;
   height: 3rem;
   width: 20rem;
-  background-color: #f1f1f1;
+  background-color: #ede7f6;
   padding: 1.2rem;
   font-size: 1rem;
   font-weight: 500;
   outline: none;
+  color: #3f51b5;
+}
+
+.container input::placeholder {
+  color: #9fa8da;
+}
+
+.container input:focus {
+  background-color: #d1c4e9;
+  border: 2px solid #5c6bc0;
 }
 
 .container button {
-  color: grey;
   height: 3rem;
   width: 5rem;
   font-size: 1rem;
   border-radius: 0 10rem 10rem 0;
   border: none;
-  background-color: #e72929;
+  background-color: #4527a0;
   color: white;
-  opacity: 0.8;
+  opacity: 0.9;
   outline: none;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
 }
 
 .container button:hover {
+  background-color: #311b92;
   opacity: 1;
   cursor: pointer;
 }

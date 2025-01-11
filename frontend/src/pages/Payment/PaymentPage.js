@@ -5,6 +5,7 @@ import Title from '../../components/Title/Title';
 import OrderItemsList from '../../components/OrderItemsList/OrderItemsList';
 import Map from '../../components/Map/Map';
 import PaypalButtons from '../../components/PaypalButtons/PaypalButtons';
+import SolstraPayButton from "../../components/SolstraPayButton/SolstraPay";
 
 export default function PaymentPage() {
   const [order, setOrder] = useState();
@@ -40,7 +41,8 @@ export default function PaymentPage() {
 
         <div className={classes.buttons_container}>
           <div className={classes.buttons}>
-            <PaypalButtons order={order} />
+            {/*<PaypalButtons order={order} />*/}
+            <SolstraPayButton order={order}></SolstraPayButton>
           </div>
         </div>
       </div>

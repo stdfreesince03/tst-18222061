@@ -4,13 +4,15 @@
   "private": true,
   "dependencies": {
     "@paypal/react-paypal-js": "^8.7.0",
+    "@solana/web3.js": "^1.98.0",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
+    "http-proxy-middleware": "^3.0.3",
     "leaflet": "^1.9.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-hook-form": "^7.54.2",
-    "react-leaflet": "^5.0.0",
+    "react-leaflet": "^4.2.1",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^11.0.2",
@@ -22,6 +24,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "proxy" : "https://api-staging.solstra.fi",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -46,3 +49,4 @@
     "@testing-library/user-event": "^14.5.2"
   }
 }
+

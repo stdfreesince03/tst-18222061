@@ -13,7 +13,7 @@ router.post(
   '/login',
   handler(async (req, res) => {
     const { email, password } = req.body;
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email : email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       res.send(generateTokenResponse(user));
@@ -90,7 +90,7 @@ router.put(
     user.password = await bcrypt.hash(newPassword, PASSWORD_HASH_SALT_ROUNDS);
     await user.save();
 
-    res.send();
+    res.send('success');
   })
 );
 

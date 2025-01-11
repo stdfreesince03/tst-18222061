@@ -69,11 +69,22 @@ router.get(
 
 router.get(
   '/newOrderForCurrentUser',
-  handler(async (req, res) => {
-    const order = await getNewOrderForCurrentUser(req);
-    if (order) res.send(order);
-    else res.status(BAD_REQUEST).send();
-  })
+    handler(async (req, res) => {
+        try {
+            let order = await getNewOrderForCurrentUser(req);
+            if (!order) {
+                await new Promise(resolve => setTimeout(resolve, 5));
+                order = await getNewOrderForCurrentUser(req);
+            }
+            if (!order) {
+                return res.status(BAD_REQUEST).send();
+            }
+            return res.send(order);
+        } catch (error) {
+            console.error('Error fetching order:', error);
+            return res.status(500).send('Internal Server Error');
+        }
+    })
 );
 
 router.get('/allstatus', (req, res) => {
