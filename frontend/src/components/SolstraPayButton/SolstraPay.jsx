@@ -7,6 +7,7 @@ import nacl from 'tweetnacl';
 
 
 
+
 export default function SolstraPayButton({ order }) {
     const [status, setStatus] = useState('');
     const [recipientWallet, setRecipientWallet] = useState(null);
@@ -31,7 +32,6 @@ export default function SolstraPayButton({ order }) {
             setIsLoading(true);
             setStatus('Creating payment...');
 
-            // CORS proxy will prepend to the full URL
             const response = await axios.post(`${CORS_PROXY}${API_URL}`, {
                 currency: 'SOL',
                 amount: order.totalPrice,
@@ -68,20 +68,32 @@ export default function SolstraPayButton({ order }) {
             setStatus('Sending payment...');
             setIsLoading(true);
 
+            let recipientPubKey;
+            try {
+                recipientPubKey = new PublicKey(recipientWallet);
+            } catch (err) {
+                throw new Error('Invalid recipient wallet address format');
+            }
+
+
             let privateKeyUint8;
             try {
-                // Handle base58 private key
+
                 const decodedKey = bs58.decode(senderWallet);
 
-                // For Solana, we need exactly 64 bytes
-                if (decodedKey.length !== 64) {
-                    throw new Error('Invalid private key length. Expected 64 bytes.');
+
+                if (decodedKey.length === 32) {
+                    // If it's a 32-byte key, we need to derive the keypair
+                    const keyPair = nacl.sign.keyPair.fromSeed(new Uint8Array(decodedKey));
+                    privateKeyUint8 = new Uint8Array([...decodedKey, ...keyPair.publicKey]);
+                } else if (decodedKey.length === 64) {
+                    // If it's already 64 bytes, just convert to Uint8Array
+                    privateKeyUint8 = new Uint8Array(decodedKey);
+                } else {
+                    throw new Error('Invalid private key length');
                 }
-
-                privateKeyUint8 = new Uint8Array(decodedKey);
-
             } catch (err) {
-                throw new Error('Invalid private key format. Please provide a valid base58 encoded private key.');
+                throw new Error('Invalid private key format: ' + err.message);
             }
 
             const senderKeypair = Keypair.fromSecretKey(privateKeyUint8);
@@ -89,8 +101,8 @@ export default function SolstraPayButton({ order }) {
             const transaction = new Transaction().add(
                 SystemProgram.transfer({
                     fromPubkey: senderKeypair.publicKey,
-                    toPubkey: new PublicKey(recipientWallet),
-                    lamports: order.totalPrice * 1_000_000_000,
+                    toPubkey: recipientPubKey,
+                    lamports: Math.floor(order.totalPrice * 1_000_000_000), // Ensure integer
                 })
             );
 
