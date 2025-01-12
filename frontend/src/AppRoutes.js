@@ -16,6 +16,7 @@ import AdminRoute from './components/AdminRoute/AdminRoute';
 import FoodsAdminPage from './pages/FoodsAdmin/FoodsAdminPage';
 import FoodEditPage from './pages/FoodEdit/FoodEditPage';
 import UsersPage from './pages/UsersPage/UsersPage';
+import PaymentTrackPage from "./pages/PaymenTrack/PaymentTrackPage";
 
 export default function AppRoutes() {
   return (
@@ -35,11 +36,19 @@ export default function AppRoutes() {
           </AuthRoute>
         }
       />
+        <Route
+            path="/payment"
+            element={
+                <AuthRoute>
+                    <PaymentPage />
+                </AuthRoute>
+            }
+        />
       <Route
-        path="/payment"
+        path="/payment/:orderId"
         element={
           <AuthRoute>
-            <PaymentPage />
+            <PaymentTrackPage />
           </AuthRoute>
         }
       />

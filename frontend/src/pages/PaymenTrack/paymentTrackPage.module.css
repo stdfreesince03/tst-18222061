@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  margin: 0 2rem 6rem 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.content {
+  width: 35rem;
+  margin: 0 3rem 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary > div {
+  display: flex;
+  margin-top: 0.7rem;
+}
+
+.summary span {
+  font-size: 1.2rem;
+}
+.summary h3 {
+  margin: 0 1rem 0 0;
+  flex-basis: 5rem;
+}
+
+.buttons_container {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.buttons {
+  margin: 2rem;
+  width: 35rem;
+}
+
+.amountToPay {
+  background: linear-gradient(90deg, #d1c4e9 0%, #ede7f6 99%, #ede7f6 100%);
+  padding: 1px;
+  margin: -7rem auto 2rem;
+  border-radius: 15px;
+  text-align: center;
+  width: 20%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.amountToPay p {
+  margin: 5px 0;
+  font-size: 0.85rem;
+  color: #4527a0;
+}
+
+.statusMessage{
+  margin-top: -1rem;
+  margin-bottom: 1.4rem;
+}
+
+.successMessage {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.viewOrderButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.viewOrderButton:hover {
+  background-color: #3700b3;
+}
+
+.expiredMessage {
+  background: #ffebee;
+  color: #d32f2f;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 20px;
+}

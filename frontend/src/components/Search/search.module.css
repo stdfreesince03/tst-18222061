@@ -38,6 +38,10 @@
   opacity: 0.9;
   outline: none;
   transition: background-color 0.3s ease, opacity 0.3s ease;
+
+  text-align: center;
+  line-height: 3rem;
+  padding: 0;
 }
 
 .container button:hover {

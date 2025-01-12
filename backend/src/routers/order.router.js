@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import handler from 'express-async-handler';
 import auth from '../middleware/auth.mid.js';
-import { BAD_REQUEST } from '../constants/httpStatus.js';
+import {BAD_REQUEST, UNAUTHORIZED} from '../constants/httpStatus.js';
 import { OrderModel } from '../models/order.model.js';
 import { OrderStatus } from '../constants/orderStatus.js';
 import { UserModel } from '../models/user.model.js';
@@ -13,13 +13,12 @@ router.post(
   '/create',
   handler(async (req, res) => {
     const order = req.body;
-
     if (order.items.length <= 0) res.status(BAD_REQUEST).send('Cart Is Empty!');
 
-    await OrderModel.deleteOne({
-      user: req.user.id,
-      status: OrderStatus.NEW,
-    });
+    // await OrderModel.deleteOne({
+    //   user: req.user.id,
+    //   status: OrderStatus.NEW,
+    // });
 
     const newOrder = new OrderModel({ ...order, user: req.user.id });
     await newOrder.save();
@@ -68,13 +67,14 @@ router.get(
 );
 
 router.get(
-  '/newOrderForCurrentUser',
+  '/order/:orderId',
     handler(async (req, res) => {
+        const {orderId} = req.params;
         try {
-            let order = await getNewOrderForCurrentUser(req);
+            let order = await getOrder(orderId);
             if (!order) {
                 await new Promise(resolve => setTimeout(resolve, 5));
-                order = await getNewOrderForCurrentUser(req);
+                order = await getOrder(req);
             }
             if (!order) {
                 return res.status(BAD_REQUEST).send();
@@ -92,6 +92,50 @@ router.get('/allstatus', (req, res) => {
   res.send(allStatus);
 });
 
+router.put('/:id/status', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { isPaid, isExpired } = req.body;
+
+        let newStatus;
+        if (isExpired) {
+            newStatus = OrderStatus.FAILED;
+        } else if (isPaid) {
+            newStatus = OrderStatus.PAID;
+        } else {
+            return res.status(400).send({
+                error: true,
+                message: 'Invalid status update. Either isPaid or isExpired must be true.',
+            });
+        }
+
+        const order = await OrderModel.findByIdAndUpdate(
+            id,
+            { status: newStatus },
+            { new: true }
+        );
+
+        if (!order) {
+            return res.status(404).send({
+                error: true,
+                message: 'Order not found',
+            });
+        }
+
+        return res.status(200).send({
+            success: true,
+            message: `Order status updated to ${newStatus}`,
+            data: order,
+        });
+    } catch (err) {
+        console.error('Error updating order status:', err);
+        return res.status(500).send({
+            error: true,
+            message: 'An internal server error occurred',
+        });
+    }
+});
+
 router.get(
   '/:status?',
   handler(async (req, res) => {
@@ -107,6 +151,6 @@ router.get(
   })
 );
 
-const getNewOrderForCurrentUser = async req =>
-  await OrderModel.findOne({ user: req.user.id, status: OrderStatus.NEW });
+const getOrder = async (orderId) =>
+  await OrderModel.findById(orderId);
 export default router;

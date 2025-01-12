@@ -31,9 +31,9 @@ export default function CheckoutPage() {
             return;
         }
 
-        await createOrder({ ...order, name: data.name, address: data.address });
-        navigate('/payment');
-    };
+        // const orderData = await createOrder({ ...order, name: data.name, address: data.address });
+        navigate('/payment',{state:{user,order:{...order,name:user.name,address:user.address}}});
+    }
 
     return (
         <div className={classes.container}>

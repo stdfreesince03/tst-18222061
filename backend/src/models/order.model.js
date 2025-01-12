@@ -30,14 +30,18 @@ OrderItemSchema.pre('validate', function (next) {
 
 const orderSchema = new Schema(
   {
-    name: { type: String, required: true },
-    address: { type: String, required: true },
-    addressLatLng: { type: LatLngSchema, required: true },
-    paymentId: { type: String },
-    totalPrice: { type: Number, required: true },
-    items: { type: [OrderItemSchema], required: true },
-    status: { type: String, default: OrderStatus.NEW },
-    user: { type: Schema.Types.ObjectId, required: true },
+      name: { type: String, required: true },
+      address: { type: String, required: true },
+      addressLatLng: { type: LatLngSchema, required: true },
+      paymentId: { type: String },
+      totalPrice: { type: Number, required: true },
+      items: { type: [OrderItemSchema], required: true },
+      status: { type: String, default: OrderStatus.PENDING},
+      user: { type: Schema.Types.ObjectId, required: true },
+      statusData: {
+          type: Object,
+          default: {} // Flexible structure for storing metadata
+      },
   },
   {
     timestamps: true,

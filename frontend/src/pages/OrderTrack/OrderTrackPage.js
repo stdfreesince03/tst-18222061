@@ -77,13 +77,19 @@ export default function OrderTrackPage() {
         </div>
 
         <div>
-          <Title title="Your Location" fontSize="1.6rem" />
+          <Title title="Delivery Status" fontSize="1.6rem" />
           <Map location={order.addressLatLng} readonly={true} />
         </div>
 
-        {order.status === 'NEW' && (
+        {order.status === 'PENDING' && (
             <div className={classes.payment}>
-              <Link to="/payment">Go To Payment</Link>
+              <p className={classes.pendingMessage}>
+                This order is still <strong>pending</strong>. You need to complete the payment to proceed.
+                Failure to complete payment within the given time may result in order cancellation.
+              </p>
+              <Link to={`/payment/${orderId}`} className={classes.paymentLink}>
+                Go To Payment
+              </Link>
             </div>
         )}
       </div>

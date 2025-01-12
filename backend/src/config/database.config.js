@@ -13,7 +13,7 @@ export const dbconnect = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    await seedUsers();
+    // await seedUsers();
     await seedFoods();
     console.log('connect successfully---');
   } catch (error) {
